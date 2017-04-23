@@ -126,20 +126,3 @@ class KMail {
         echo '<pre>' . print_r($this, 1) . '</pre>';
     }
 }
-
-
-$test = new KMail('Test');
-$test->addArdess('compolom@gmail.com');
-$test->addFile('class.php', file_get_contents(__FILE__));
-$test->setSubject('Test mail');
-$test->send();
-$test->debug();
-
-$test2 = new KMail('Test2');
-$test2
-    ->addArdess('compolom@gmail.com')
-    ->addArdess('test@gmail.com')
-    ->addFile('class.php', file_get_contents(__FILE__))
-    ->setSubject('Test mail')
-    ->send();
-$test2->debug();
