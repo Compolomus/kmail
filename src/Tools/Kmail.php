@@ -20,7 +20,7 @@ class KMail {
 
     private $subject = '(No subject)';
 
-    private $ardess = [];
+    private $adress = [];
 
     private $body;
 
@@ -30,9 +30,9 @@ class KMail {
         $this->mb();    
     }  
 
-    private function sendMailUtf8($ardess, $subject, $message, $header)
+    private function sendMailUtf8($adress, $subject, $message, $header)
     {
-        return mail($ardess, '=?UTF-8?B?' . base64_encode($subject) . '?=', $message, 'MIME-Version: 1.0' . PHP_EOL . $header);
+        return mail($adress, '=?UTF-8?B?' . base64_encode($subject) . '?=', $message, 'MIME-Version: 1.0' . PHP_EOL . $header);
     }
 
     public function send()
@@ -40,9 +40,9 @@ class KMail {
         if (!$this->getHeader()) {
             $this->setHeader();
         }
-        if (sizeof($this->ardess) > 0) {
-            foreach ($this->ardess as $ardess) {
-                $this->sendMailUtf8($ardess, $this->getSubject(), $this->getBody(), $this->getHeader());
+        if (sizeof($this->adress) > 0) {
+            foreach ($this->adress as $adress) {
+                $this->sendMailUtf8($adress, $this->getSubject(), $this->getBody(), $this->getHeader());
             }    
         } else {
             throw new Exception('Отсутствует адресат');    
@@ -51,7 +51,7 @@ class KMail {
 
     public function addArdess($mail)
     {
-        $this->ardess[] = $mail;
+        $this->adress[] = $mail;
         
         return $this;
     }
