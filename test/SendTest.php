@@ -1,6 +1,6 @@
 <?php
 
-use Compolom\Tools;
+use Compolomus\Kmail;
 
 $test = new KMail('Test text');
 $test

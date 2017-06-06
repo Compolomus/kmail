@@ -1,5 +1,5 @@
 {
-  "name": "Kmail",
+  "name": "Compolomus/Kmail",
   "description": "Light PHP mailer",
   "license": "GPL-3.0",
   "keywords": [
@@ -16,7 +16,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "Compolom\\Tools\\Kmail\\": "src/Tools/"
+      "Compolomus\\Kmail\\": "src/"
     }
   },
   "require": {
