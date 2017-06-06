@@ -1,13 +1,11 @@
 <?php
 
-namespace Compolom\Tools;
-
-require('../src/Tools/Kmail.php');
+use Compolom\Tools;
 
 $test = new KMail('Test text');
 $test
-    ->addArdess('test@mail.ru')
-    ->addArdess('test@gmail.com')
+    ->addAdress('test@mail.ru')
+    ->addAdress('test@gmail.com')
     ->addFile('class.php', file_get_contents(__FILE__))
     ->setSubject('Test mail')
     ->send();

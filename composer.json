@@ -1,0 +1,25 @@
+{
+  "name": "Kmail",
+  "description": "Light PHP mailer",
+  "license": "GPL-3.0",
+  "keywords": [
+    "email",
+    "attach files",
+    "send email"
+  ],
+  "type": "library",
+  "authors": [
+    {
+      "name": "Koenig",
+      "email": "compolom@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Compolom\\Tools\\Kmail\\": "src/Tools/"
+    }
+  },
+  "require": {
+    "php": ">=5.4.0"
+  }
+}
