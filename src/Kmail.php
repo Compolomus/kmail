@@ -1,16 +1,9 @@
-<?php
-/**
- * Compolom Tools
- * @author Mitenev Dmitrii <compolom@gmail.com>
- * @license LICENSE.md
- * @version 1.0
- */
+<?php declare(strict_types=1);
 
-namespace Compolomus;
+namespace Compolomus\Kmail;
 
 class KMail
 {
-
     const VERSION = '1.0';
 
     const RELEASE_DATE = '2017-04-24';
@@ -25,23 +18,21 @@ class KMail
 
     private $body;
 
-    public function __construct($text)
+    public function __construct(string $text)
     {
         $this->addBodyMessage($text);
         $this->mb();
     }
 
-    private function sendMailUtf8($adress, $subject, $message, $header)
+    private function sendMailUtf8(string $adress, string $subject, string $message, string $header): bool
     {
         return mail($adress, '=?UTF-8?B?' . base64_encode($subject) . '?=', $message,
             'MIME-Version: 1.0' . PHP_EOL . $header);
     }
 
-    public function send()
+    public function send(): ?\Exception
     {
-        if (!$this->getHeader()) {
-            $this->setHeader();
-        }
+        $this->getHeader();
         if (sizeof($this->adress) > 0) {
             foreach ($this->adress as $adress) {
                 $this->sendMailUtf8($adress, $this->getSubject(), $this->getBody(), $this->getHeader());
@@ -49,16 +40,17 @@ class KMail
         } else {
             throw new Exception('Отсутствует адресат');
         }
+        return null;
     }
 
-    public function addAdress($mail)
+    public function addAdress(string $mail): KMail
     {
         $this->adress[] = $mail;
 
         return $this;
     }
 
-    private function addBodyMessage($text)
+    private function addBodyMessage(string $text): void
     {
         $this->body .= '--' . $this->mb() . PHP_EOL .
             'Content-Type: text/plain; charset="UTF-8"' . PHP_EOL .
@@ -67,7 +59,7 @@ class KMail
             chunk_split(base64_encode($text)) . PHP_EOL;
     }
 
-    public function addFile($fileName, $fileStream)
+    public function addFile(string $fileName, string $fileStream): KMail
     {
         $this->body .= PHP_EOL . '--' . $this->mb() . PHP_EOL .
             'Content-Type: application/octet-stream; name="' . $fileName . '"' . PHP_EOL .
@@ -78,26 +70,26 @@ class KMail
         return $this;
     }
 
-    private function endBody()
+    private function endBody(): string
     {
         return '--' . $this->mb() . '--';
     }
 
-    private function getBody()
+    private function getBody(): string
     {
         return $this->body . $this->endBody();
     }
 
-    private function mb()
+    private function mb(): string
     {
         if (!$this->mb) {
-            $this->mb = '_=_Multipart_Boundary_' . substr(md5(uniqid(time())), 0, 8);
+            $this->mb = '_=_Multipart_Boundary_' . substr(md5(uniqid()), 0, 8);
         }
 
         return $this->mb;
     }
 
-    public function setSubject($subject)
+    public function setSubject(string $subject): KMail
     {
         if ($subject) {
             $this->subject = $subject;
@@ -106,25 +98,21 @@ class KMail
         return $this;
     }
 
-    private function getSubject()
+    private function getSubject(): string
     {
         return $this->subject;
     }
 
-    private function setHeader($email = 'No reply')
+    private function getHeader(): string
     {
-        $this->header = 'Content-Type: multipart/mixed; boundary="' . $this->mb() . '"' . PHP_EOL . 'X-Mailer: PHP' . PHP_EOL . 'Reply-To: ' . $email . PHP_EOL;
-
-        return $this;
-    }
-
-    private function getHeader()
-    {
+        if (!$this->header) {
+            $this->header = 'Content-Type: multipart/mixed; boundary="' . $this->mb() . '"' . PHP_EOL . 'X-Mailer: PHP' . PHP_EOL . 'Reply-To: No reply' . PHP_EOL;
+        }
         return $this->header;
     }
 
-    public function debug()
+    public function debug(): void
     {
-        echo '<pre>' . print_r($this, 1) . '</pre>';
+        echo '<pre>' . print_r($this, true) . '</pre>';
     }
 }

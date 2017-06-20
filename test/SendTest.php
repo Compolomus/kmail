@@ -1,6 +1,8 @@
 <?php
 
-use Compolomus\Kmail;
+use Compolomus\Kmail\Kmail;
+
+require '../vendor/autoload.php';
 
 $test = new KMail('Test text');
 $test
