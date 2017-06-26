@@ -34,12 +34,12 @@ class KMail
     {
         if (sizeof($this->adress) == 0) {
             throw new \Exception('Отсутствует адресат');
-        } else {
-            $this->getHeader();
-            foreach ($this->adress as $adress) {
-                $this->sendMailUtf8($adress, $this->getSubject(), $this->getBody(), $this->getHeader());
-            }
         }
+        $this->getHeader();
+        foreach ($this->adress as $adress) {
+            $this->sendMailUtf8($adress, $this->getSubject(), $this->getBody(), $this->getHeader());
+        }
+
         return null;
     }
 
