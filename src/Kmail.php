@@ -4,11 +4,11 @@ namespace Compolomus\Kmail;
 
 class KMail
 {
-    const VERSION = '1.0';
+    const VERSION = '1.1';
 
-    const RELEASE_DATE = '2017-04-24';
+    const RELEASE_DATE = '2017-06-26';
 
-    private $mb;
+    private $bound;
 
     private $header;
 
@@ -21,7 +21,7 @@ class KMail
     public function __construct(string $text)
     {
         $this->addBodyMessage($text);
-        $this->mb();
+        $this->bound();
     }
 
     private function sendMailUtf8(string $adress, string $subject, string $message, string $header): bool
@@ -32,13 +32,13 @@ class KMail
 
     public function send(): ?\Exception
     {
-        $this->getHeader();
-        if (sizeof($this->adress) > 0) {
+        if (sizeof($this->adress) == 0) {
+            throw new \Exception('Отсутствует адресат');
+        } else {
+            $this->getHeader();
             foreach ($this->adress as $adress) {
                 $this->sendMailUtf8($adress, $this->getSubject(), $this->getBody(), $this->getHeader());
             }
-        } else {
-            throw new \Exception('Отсутствует адресат');
         }
         return null;
     }
@@ -46,13 +46,12 @@ class KMail
     public function addAdress(string $mail): KMail
     {
         $this->adress[] = $mail;
-
         return $this;
     }
 
     private function addBodyMessage(string $text): void
     {
-        $this->body .= '--' . $this->mb() . PHP_EOL .
+        $this->body .= '--' . $this->bound() . PHP_EOL .
             'Content-Type: text/plain; charset="UTF-8"' . PHP_EOL .
             'Content-Disposition: inline' . PHP_EOL .
             'Content-Transfer-Encoding: base64' . PHP_EOL . PHP_EOL .
@@ -61,7 +60,7 @@ class KMail
 
     public function addFile(string $fileName, string $fileStream): KMail
     {
-        $this->body .= PHP_EOL . '--' . $this->mb() . PHP_EOL .
+        $this->body .= PHP_EOL . '--' . $this->bound() . PHP_EOL .
             'Content-Type: application/octet-stream; name="' . $fileName . '"' . PHP_EOL .
             'Content-Disposition: attachment;' . PHP_EOL .
             ' filename="' . $fileName . '"' . PHP_EOL .
@@ -72,7 +71,7 @@ class KMail
 
     private function endBody(): string
     {
-        return '--' . $this->mb() . '--';
+        return '--' . $this->bound() . '--';
     }
 
     private function getBody(): string
@@ -82,11 +81,11 @@ class KMail
 
     private function mb(): string
     {
-        if (!$this->mb) {
-            $this->mb = '_=_Multipart_Boundary_' . substr(md5(uniqid()), 0, 8);
+        if (!$this->bound) {
+            $this->bound = '_=_Multipart_Boundary_' . substr(md5(uniqid()), 0, 8);
         }
 
-        return $this->mb;
+        return $this->bound;
     }
 
     public function setSubject(string $subject): KMail
@@ -106,7 +105,7 @@ class KMail
     private function getHeader(): string
     {
         if (!$this->header) {
-            $this->header = 'Content-Type: multipart/mixed; boundary="' . $this->mb() . '"' . PHP_EOL . 'X-Mailer: PHP' . PHP_EOL . 'Reply-To: No reply' . PHP_EOL;
+            $this->header = 'Content-Type: multipart/mixed; boundary="' . $this->bound() . '"' . PHP_EOL . 'X-Mailer: PHP' . PHP_EOL . 'Reply-To: No reply' . PHP_EOL;
         }
         return $this->header;
     }
