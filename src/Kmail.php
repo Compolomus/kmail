@@ -38,7 +38,7 @@ class KMail
                 $this->sendMailUtf8($adress, $this->getSubject(), $this->getBody(), $this->getHeader());
             }
         } else {
-            throw new Exception('Отсутствует адресат');
+            throw new \Exception('Отсутствует адресат');
         }
         return null;
     }
