@@ -79,7 +79,7 @@ class KMail
         return $this->body . $this->endBody();
     }
 
-    private function mb(): string
+    private function bound(): string
     {
         if (!$this->bound) {
             $this->bound = '_=_Multipart_Boundary_' . substr(md5(uniqid()), 0, 8);
